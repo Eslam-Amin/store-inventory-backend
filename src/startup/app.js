@@ -16,8 +16,6 @@ module.exports = (app) => {
   app.use(cors());
   app.use(compression());
   app.use(helmet());
-  //Data Sanitization against XSS
-  app.use(xss());
   //Prevent parameter pollution
   app.use(hpp());
 
