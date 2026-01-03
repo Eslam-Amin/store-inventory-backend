@@ -6,10 +6,12 @@ const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
 const inventoryController = require("../controllers/inventory.controller");
+const { validateFileUpload } = require("../validators/fileUpload.validator");
 
 router.post(
-  "/inventory/upload",
+  "/upload",
   upload.single("file"),
+  validateFileUpload,
   inventoryController.uploadInventory
 );
 
