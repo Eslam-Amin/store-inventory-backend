@@ -1,6 +1,6 @@
 # Digital Bookstore Backend API
 
-A robust, containerized backend system for a digital bookstore. This project implements a Clean Architecture pattern to manage inventory via CSV uploads and generate PDF analytics reports.
+A robust, containerized backend system for a digital bookstore. This project implements a Clean Architecture pattern to manage inventory via CSV uploads and generate PDF analytics reports. It is built with **Node.js**, **Sequelize**, and **PostgreSQL**, featuring strict data validation and global error handling.
 
 ## 🚀 Tech Stack
 
@@ -8,6 +8,7 @@ A robust, containerized backend system for a digital bookstore. This project imp
 - **Framework:** Express.js
 - **Database:** PostgreSQL
 - **ORM:** Sequelize
+- **Validation:** Joi
 - **Architecture:** Modular (Startup/Routes/Controllers/Services)
 - **Containerization:** Docker & Docker Compose
 
@@ -24,7 +25,7 @@ A robust, containerized backend system for a digital bookstore. This project imp
 └── src
     ├── config              # Database Configuration
     ├── controllers         # Request Handlers (CSV Logic, PDF Generation)
-    ├── middlewares         # Custom Middlewares (Error Handling, Auth)
+    ├── middlewares         # Custom Middlewares (Error Handling, Uploads)
     ├── models              # Sequelize Schemas (Store, Book, Author)
     ├── routes              # API Route Definitions
     ├── startup             # App & DB Initialization Logic
@@ -46,6 +47,7 @@ cd <repository-folder>
 ```
 
 2. **Start the services:**
+   This command builds the images and starts the database and backend.
 
 ```bash
 docker-compose up --build
@@ -54,6 +56,7 @@ docker-compose up --build
 
 - The API will be available at: `http://localhost:3000`
 - The Database (PostgreSQL) runs on port `5432`.
+- **Hot Reloading:** The server is configured with `nodemon -L`, so changes to your code will automatically restart the container.
 
 3. **Stop the services:**
 
@@ -65,6 +68,8 @@ docker-compose down
 ---
 
 ## 💻 Manual Setup (Local Development)
+
+If you prefer running without Docker:
 
 1. **Install Dependencies:**
 
@@ -109,6 +114,7 @@ Ingest data to create/update Stores, Authors, Books, and Inventory.
 - **Endpoint:** `POST /api/inventory/upload`
 - **Body Type:** `form-data`
 - **Key:** `file` (Select CSV file)
+- **Validation:** Checks for file existence and valid CSV structure.
 
 **CSV Headers Required:**
 
@@ -123,5 +129,39 @@ Generate a PDF report listing the Top 5 Priciest Books and Top 5 Prolific Author
 
 - **Endpoint:** `GET /api/store/:id/download-report`
 - **Example:** `GET /api/store/1/download-report`
+- **Validation:** \* Validates that `:id` is a valid integer using **Joi**.
+- Returns `400 Bad Request` if ID is invalid.
+- Returns `404 Not Found` if the Store does not exist.
 
 ---
+
+## 🛡️ Error Handling & Validation
+
+- **Joi Validation:** Middleware intercepts requests to ensure parameters (like IDs) match expected formats before reaching the controller.
+- **Global Error Handler:** A centralized middleware catches all errors (Database connection issues, Validation errors, etc.) and returns a consistent JSON error response:
+
+```json
+{
+  "success": false,
+  "error": {
+    "message": "Store ID must be a number"
+  }
+}
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+**1. "Connection Refused" (ECONNREFUSED)**
+
+- **Docker:** Ensure `docker-compose up` is running.
+- **Local:** Ensure your local Postgres service is started and credentials in `.env` are correct.
+
+**2. "Route not found"**
+
+- Ensure you are using the `/api` prefix (e.g., `/api/inventory/...`).
+
+**3. Windows Docker Issues**
+
+- If the server doesn't restart on file changes, ensure your `package.json` script uses `nodemon -L server.js` (Legacy Watch mode).
