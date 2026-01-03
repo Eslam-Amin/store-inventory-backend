@@ -3,7 +3,6 @@ const cors = require("cors");
 const express = require("express");
 const compression = require("compression");
 const helmet = require("helmet");
-const xss = require("xss-clean");
 const hpp = require("hpp");
 const globalErrorMiddleware = require("../middlewares/globalError.middleware");
 const appRouter = require("./routes");
