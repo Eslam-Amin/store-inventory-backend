@@ -1,7 +1,7 @@
 class InventoryController {
-  uploadInventory(req, res) {
+  uploadInventory(req, res, next) {
     if (!req.file) {
-      return res.status(400).json({ error: "Please upload a CSV file" });
+      return next(ApiError.badRequest("Please upload a CSV file"));
     }
 
     const results = [];
@@ -28,7 +28,7 @@ class InventoryController {
           });
         } catch (error) {
           console.error(error);
-          res.status(500).json({ error: "Error processing inventory data" });
+          next(error);
         }
       });
   }

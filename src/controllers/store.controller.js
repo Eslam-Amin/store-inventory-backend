@@ -3,6 +3,7 @@ const csv = require("csv-parser");
 const PDFDocument = require("pdfkit");
 const { Store, Book, Author, StoreBook } = require("../models");
 const sequelize = require("../config/database");
+const ApiError = require("../utils/ApiError");
 
 // --- Helper: Process a single CSV Row ---
 const processRow = async (row) => {
@@ -56,12 +57,12 @@ const processRow = async (row) => {
 };
 
 class StoreController {
-  async generateReport(req, res) {
+  async generateReport(req, res, next) {
     const storeId = req.params.id;
 
     try {
       const store = await Store.findByPk(storeId);
-      if (!store) return res.status(404).json({ error: "Store not found" });
+      if (!store) return next(ApiError.notFound("Store not found"));
 
       // Query 1: Top 5 Priciest Books
       const topPriciest = await StoreBook.findAll({
@@ -139,7 +140,7 @@ class StoreController {
       doc.end();
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Error generating report" });
+      next(error);
     }
   }
 }
