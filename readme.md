@@ -24,11 +24,12 @@ A robust, containerized backend system for a digital bookstore. This project imp
 └── src
     ├── config              # Database Configuration
     ├── controllers         # Request Handlers (CSV Logic, PDF Generation)
-    ├── middlewares         # Custom Middlewares (Error Handling, Validation)
+    ├── middlewares         # Custom Middlewares (Error Handling, Auth)
     ├── models              # Sequelize Schemas (Store, Book, Author)
     ├── routes              # API Route Definitions
     ├── startup             # App & DB Initialization Logic
-    └── utils               # Helper Utilities (Custom Errors, Formatters)
+    ├── utils               # Helper Utilities (Custom Errors, Formatters)
+    └── validators          # Joi Validation Schemas
 
 ```
 
