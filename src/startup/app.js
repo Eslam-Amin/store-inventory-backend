@@ -14,7 +14,6 @@ module.exports = (app) => {
   app.use(express.urlencoded({ extended: true }));
 
   app.use(cors());
-  app.options("*", cors());
   app.use(compression());
   app.use(helmet());
   //Data Sanitization against XSS
