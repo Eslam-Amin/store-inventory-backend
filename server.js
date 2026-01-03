@@ -1,5 +1,5 @@
 const express = require("express");
-const { initDb } = require("./src/startup/db");
+const { initDb } = require("./src/startup/db-connect");
 const { env } = require("./src/config/env");
 
 // Express app
