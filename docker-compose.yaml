@@ -3,19 +3,20 @@ version: "3.8"
 services:
   app:
     build: .
+    # Overwrite the command to run nodemon instead of "npm start"
+    command: npm run dev
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - db
+      - .:/usr/src/app # Syncs your local folder to container
+      - /usr/src/app/node_modules # PROTECTS container dependencies
     environment:
       - DB_HOST=db
       - DB_USER=postgres
       - DB_PASS=password
       - DB_NAME=bookstore
-    command: npm run dev
+    depends_on:
+      - db
 
   db:
     image: postgres:15
