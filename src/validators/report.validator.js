@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const { validateRequest } = require("../utils/validation");
 
 // 1. Validation for Report Download (ID must be a number)
